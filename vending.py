@@ -41,7 +41,7 @@ def run(operations_path: Path) -> bool:
         return "money_restock"
 
     # FUNCIÓN DE ESCRITURA
-
+    # placeholder
     return filecmp.cmp(status_path, "data/vending/.expected", shallow=False)
 
 
