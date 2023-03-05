@@ -24,20 +24,52 @@ def run(operations_path: Path) -> bool:
                     case "M":
                         money_restock(splitline[2])
 
+    # Codigos de Error:
+    e1 = {"E1": "PRODUCT NOT FOUND"}
+    e2 = {"E2": "UNAVAILABLE STOCK"}
+    e3 = {"E3": "NOT ENOUGH USER MONEY"}
+
+
     # FUNCIÓN DE PEDIDO
     def order(code: str, qty: int, money: int) -> list:
+        with open(operations_path, "w") as f:
+            for line in f.strip().split():
+                for value in line:
+                    if value[0] == "O":
+                        if "idk" != line[1]:
+                            return e1
+                        if "idk" > line[3]:
+                            return e2
+                        else:
+                            line[3] = line[3] - "idk"
+
         return "order"
 
     # FUNCIÓN DE REPOSICIÓN DE PRODUCTO
     def product_restock(code: str, qty: int) -> list:
+        with open(operations_path, "r") as f:
+            for line in f.strip().split():
+                for value in line:
+                    if value[0] == "R":
+
         return "product_restock"
 
     # FUNCIÓN DE CAMBIO DE PRECIO
     def price_update(code: str, price: int) -> list:
+        with open(operations_path, "r") as f:
+            for line in f.strip().split():
+                for value in line:
+                    if value[0] == "P":
+
         return "price_update"
 
     # FUNCIÓN DE REPOSICION DE DINERO
     def money_restock(qty: int) -> list:
+        with open(operations_path, "r") as f:
+            for line in f.strip().split():
+                for value in line:
+                    if value[0] == "M":
+
         return "money_restock"
 
     # FUNCIÓN DE ESCRITURA
