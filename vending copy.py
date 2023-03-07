@@ -6,7 +6,6 @@ from pathlib import Path
 
 
 # CAMBIAR DATA !!!!!!!!!!!!!!!!!!!!!!
-# Intentar diccionario anidado
 
 
 def run(operations_path: Path) -> bool:
