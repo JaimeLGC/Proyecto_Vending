@@ -9,6 +9,7 @@ if splitline[0] == "R":
 
 # updated_vending[code]["ammount"] = updated_vending.get(code["ammount"], 0) + qty
 # updated_vending[code]["price"] = updated_vending.get(code["pric"], 0)
+
 updated_vending[code] = [
     updated_vending.get(code, 0) + qty,
     updated_vending.get(code, 0),

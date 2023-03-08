@@ -94,13 +94,14 @@ def run(operations_path: Path) -> bool:
     # FUNCIÓN DE REPOSICIÓN DE PRODUCTO
 
     def product_restock(code: str, qty: int) -> list:
-
-        updated_vending[code] = [
-            updated_vending.get(code[0], 0) + qty,
-            updated_vending.get(code[1], 0),
-        ]
-
-        return "product_restock"
+        if code in updated_vending.keys():
+            updated_vending[code] = [
+                updated_vending.get(code)[0] + qty,
+                updated_vending.get(code)[1],
+            ]
+        else:
+            updated_vending[code] = [qty, 0]
+            return "product_restock"
 
     # FUNCIÓN DE CAMBIO DE PRECIO
 
