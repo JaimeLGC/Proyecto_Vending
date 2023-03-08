@@ -10,38 +10,49 @@ from pathlib import Path
 
 def run(operations_path: Path) -> bool:
     status_path = "vending/status.dat"
+
     # SE GUARDAN LOS DATOS ACTUALIZADOS PARA ORDENARLOS (Diccionario de listas)
 
+    # Diccionario para los artículos, key: str / value: list
     updated_vending = {}
 
+    # Diccionario único para el dinero, key: str / value: int
     cash_stock = {"1€": 0}
 
     # FUNCIÓN DE LECTURA
 
     def reading(reading_path: Path) -> list:
 
+        # Lee el fichero de entrada
         with open(reading_path, "r") as f:
 
+            # Recorre las lineas del fichero
             for line in f:
 
+                # Splitline: List // Separa las lineas por espacios
                 splitline = line.strip().split()
 
+                # Match Case, llama a una función dependiendo del codigo que se encuentra en el primer item de Splitline
                 match splitline[0]:
 
                     case "O":
 
+                        # Splitline 1 -> Codigo / Splitline 2 -> Cantidad / Splitline 3 -> Dinero
                         order(splitline[1], int(splitline[2]), int(splitline[3]))
 
                     case "R":
 
+                        # Splitline 1 -> Codigo / Splitline 2 -> Cantidad
                         product_restock(splitline[1], int(splitline[2]))
 
                     case "P":
 
+                        # Splitline 1 -> Codigo / Splitline 2 -> Precio
                         price_update(splitline[1], int(splitline[2]))
 
                     case "M":
 
+                        # Splitline 1 -> Dinero
                         money_restock(int(splitline[1]))
 
         writing(status_path)
@@ -50,15 +61,23 @@ def run(operations_path: Path) -> bool:
 
     def order(code: str, qty: int, money: int) -> list:
 
+        # Comprueba que el producto existe buscando su codigo en las llaves del diccionario
         if code in updated_vending.keys():
 
+            # Comprueba que hay stock comparando la cantidad pedida con el primer elemento de la lista del valor del articulo en el diccionario
             if qty <= updated_vending.get(code)[0]:
 
+                # Comprueba que el dinero introducido es mayor que el precio (segundo elemento de la lista del valor del artículo)
                 if money >= updated_vending.get(code)[1]:
 
+                    # Elimina los productos comprados del stock haciendo la funcion de restock con un valor negativo
                     product_restock(code, -qty)
 
-                    money_restock(money - (qty * updated_vending.get(code)[1][1]))
+                    # OJO CON ESTE
+                    # Añade a las monedas el precio del producto multiplicada por la cantidad para saltarse el cambio
+                    money_restock(qty * updated_vending.get(code)[1])
+
+                # ERRORES
 
                 else:
 
@@ -78,7 +97,7 @@ def run(operations_path: Path) -> bool:
 
         updated_vending[code] = [
             updated_vending.get(code[0], 0) + qty,
-            updated_vending.get(code, 0),
+            updated_vending.get(code[1], 0),
         ]
 
         return "product_restock"
