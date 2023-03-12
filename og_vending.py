@@ -4,22 +4,17 @@
 import filecmp
 from pathlib import Path
 
-
+# CAMBIAR DATA !!!!!!!!!!!!!!!!!!!!!!
 def run(operations_path: Path) -> bool:
     status_path = "data/vending/status.dat"
     updated_vending = {}
     cash_stock = {"1€": 0}
-
-    error1 = "(E1: PRODUCT NOT FOUND)"
-    error2 = "(E2: UNAVAILABLE STOCK)"
-    error3 = "(E3: NOT ENOUGH USER MONEY)"
 
     # FUNCIÓN DE LECTURA
     def reading(reading_path: Path) -> list:
         with open(reading_path, "r") as f:
             for line in f:
                 splitline = line.strip().split()
-                # Los indices de splitline representarán un valor distinto dependiendo de la función
                 match splitline[0]:
                     case "O":
                         order(splitline[1], int(splitline[2]), int(splitline[3]))
@@ -30,27 +25,20 @@ def run(operations_path: Path) -> bool:
                     case "M":
                         money_restock(int(splitline[1]))
         writing(status_path)
-        return None
-        # (Returns explícitos por mantenimiento y legiblidad)
 
     # FUNCIÓN DE PEDIDO
     def order(code: str, qty: int, money: int) -> list:
-        check = "❌"
-        error = ""
         if code in updated_vending.keys():
             if qty <= updated_vending.get(code)[0]:
                 if money >= updated_vending.get(code)[1] * qty:
                     product_restock(code, -qty)
                     money_restock(qty * updated_vending.get(code)[1])
-                    # (Llamar a otras funciones hace que se devuelvan prints extras)
-                    check = "✅"
                 else:
-                    error = error3
+                    return "Error 1"
             else:
-                error = error2
+                return "Error 2"
         else:
-            error = error1
-        print(f"{check} 0 {code} {qty} {money} {error}")
+            return "Error 3"
 
     # FUNCIÓN DE REPOSICIÓN DE PRODUCTO
     def product_restock(code: str, qty: int) -> list:
@@ -61,23 +49,18 @@ def run(operations_path: Path) -> bool:
             ]
         else:
             updated_vending[code] = [qty, 0]
-        print(f"✅ R {code} {qty}")
-        return None
+            return "product_restock"
 
     # FUNCIÓN DE CAMBIO DE PRECIO
     def price_update(code: str, price: int) -> list:
         if code in updated_vending.keys():
             updated_vending.get(code)[1] = price
-            print(f"✅ P {code} {price}")
-        else:
-            print(f"❌ P {code} {price} {error1}")
-        return None
+        return "price_update"
 
     # FUNCIÓN DE REPOSICION DE DINERO
     def money_restock(cash: int) -> list:
         cash_stock["1€"] += cash
-        print(f"✅ M {cash}")
-        return None
+        return "money_restock"
 
     # FUNCIÓN DE ESCRITURA
     def writing(path: Path):
@@ -87,11 +70,8 @@ def run(operations_path: Path) -> bool:
                 f.write(
                     f"{item} {updated_vending.get(item)[0]} {updated_vending.get(item)[1]}\n"
                 )
-        return None
 
-    # Se llama a la función de lectura
     reading("data/vending/operations.dat")
-
     return filecmp.cmp(status_path, "data/vending/.expected", shallow=False)
 
 
