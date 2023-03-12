@@ -20,7 +20,7 @@ def run(operations_path: Path) -> bool:
             for line in f:
                 splitline = line.strip().split()
                 # Los indices de splitline representarán un valor distinto dependiendo de la función
-                # El valor booleano acciona el print del "check", sin el se imprimen líneas innecesarias
+                # El valor booleano acciona el print del "check", sin el se imprimen líneas innecesarias al mostrar en pantalla
                 match splitline[0]:
                     case "O":
                         order(splitline[1], int(splitline[2]), int(splitline[3]))
@@ -32,7 +32,6 @@ def run(operations_path: Path) -> bool:
                         money_restock(int(splitline[1]), True)
         writing(status_path)
         return None
-        # (Returns explícitos por mantenimiento y legiblidad)
 
     # FUNCIÓN DE PEDIDO
     def order(code: str, qty: int, money: int) -> list:
