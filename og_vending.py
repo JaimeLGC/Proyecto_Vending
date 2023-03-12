@@ -33,12 +33,7 @@ def run(operations_path: Path) -> bool:
                 if money >= updated_vending.get(code)[1] * qty:
                     product_restock(code, -qty)
                     money_restock(qty * updated_vending.get(code)[1])
-                else:
-                    return "Error 1"
-            else:
-                return "Error 2"
-        else:
-            return "Error 3"
+
 
     # FUNCIÓN DE REPOSICIÓN DE PRODUCTO
     def product_restock(code: str, qty: int) -> list:
@@ -49,18 +44,15 @@ def run(operations_path: Path) -> bool:
             ]
         else:
             updated_vending[code] = [qty, 0]
-            return "product_restock"
 
     # FUNCIÓN DE CAMBIO DE PRECIO
     def price_update(code: str, price: int) -> list:
         if code in updated_vending.keys():
             updated_vending.get(code)[1] = price
-        return "price_update"
 
     # FUNCIÓN DE REPOSICION DE DINERO
     def money_restock(cash: int) -> list:
         cash_stock["1€"] += cash
-        return "money_restock"
 
     # FUNCIÓN DE ESCRITURA
     def writing(path: Path):
