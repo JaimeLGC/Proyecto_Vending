@@ -20,16 +20,15 @@ def run(operations_path: Path) -> bool:
             for line in f:
                 splitline = line.strip().split()
                 # Los indices de splitline representarán un valor distinto dependiendo de la función
-                # El valor booleano acciona el print del "check", sin el se imprimen líneas innecesarias al mostrar en pantalla
                 match splitline[0]:
                     case "O":
                         order(splitline[1], int(splitline[2]), int(splitline[3]))
                     case "R":
-                        product_restock(splitline[1], int(splitline[2]), True)
+                        product_restock(splitline[1], int(splitline[2]))
                     case "P":
                         price_update(splitline[1], int(splitline[2]))
                     case "M":
-                        money_restock(int(splitline[1]), True)
+                        money_restock(int(splitline[1]))
         writing(status_path)
         return None
 
@@ -40,8 +39,11 @@ def run(operations_path: Path) -> bool:
         if code in updated_vending.keys():
             if qty <= updated_vending.get(code)[0]:
                 if money >= updated_vending.get(code)[1] * qty:
-                    product_restock(code, -qty, False)
-                    money_restock(qty * updated_vending.get(code)[1], False)
+                    updated_vending[code] = [
+                        updated_vending.get(code)[0] - qty,
+                        updated_vending.get(code)[1],
+                    ]
+                    cash_stock["1€"] += qty * updated_vending.get(code)[1]
                     check = "✅"
                 else:
                     error = error3
@@ -52,7 +54,7 @@ def run(operations_path: Path) -> bool:
         print(f"{check} 0 {code} {qty} {money} {error}")
 
     # FUNCIÓN DE REPOSICIÓN DE PRODUCTO
-    def product_restock(code: str, qty: int, check: bool) -> list:
+    def product_restock(code: str, qty: int) -> list:
         if code in updated_vending.keys():
             updated_vending[code] = [
                 updated_vending.get(code)[0] + qty,
@@ -60,8 +62,7 @@ def run(operations_path: Path) -> bool:
             ]
         else:
             updated_vending[code] = [qty, 0]
-        if check:
-            print(f"✅ R {code} {qty}")
+        print(f"✅ R {code} {qty}")
         return None
 
     # FUNCIÓN DE CAMBIO DE PRECIO
@@ -74,10 +75,9 @@ def run(operations_path: Path) -> bool:
         return None
 
     # FUNCIÓN DE REPOSICION DE DINERO
-    def money_restock(cash: int, check: bool) -> list:
+    def money_restock(cash: int) -> list:
         cash_stock["1€"] += cash
-        if check:
-            print(f"✅ M {cash}")
+        print(f"✅ M {cash}")
         return None
 
     # FUNCIÓN DE ESCRITURA

@@ -4,6 +4,7 @@
 import filecmp
 from pathlib import Path
 
+
 def run(operations_path: Path) -> bool:
     status_path = "data/vending/status.dat"
     updated_vending = {}
@@ -32,7 +33,6 @@ def run(operations_path: Path) -> bool:
                 if money >= updated_vending.get(code)[1] * qty:
                     product_restock(code, -qty)
                     money_restock(qty * updated_vending.get(code)[1])
-
 
     # FUNCIÓN DE REPOSICIÓN DE PRODUCTO
     def product_restock(code: str, qty: int) -> list:
