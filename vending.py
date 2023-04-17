@@ -4,8 +4,9 @@
 import filecmp
 from pathlib import Path
 
-# VARIABLES DE GUARDADO
 status_path = "data/vending/status.dat"
+
+# VARIABLES DE GUARDADO
 updated_vending = {}
 cash_stock = {"1€": 0}
 
